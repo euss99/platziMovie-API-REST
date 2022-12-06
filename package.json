@@ -1,0 +1,20 @@
+{
+  "name": "platzimovie-api-rest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/euss99/platziMovie-API-REST.git"
+  },
+  "keywords": [],
+  "author": "@euss99",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/euss99/platziMovie-API-REST/issues"
+  },
+  "homepage": "https://github.com/euss99/platziMovie-API-REST#readme"
+}
