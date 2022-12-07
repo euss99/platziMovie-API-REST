@@ -11,7 +11,7 @@ const api = axios.create({
 const endpoint_TRENDING = "trending/movie/day";
 const endpoint_GENRE = "/genre/movie/list"
 
-// Función para conseguir las películas en tendencia para preview
+// Función para conseguir las películas en tendencia para preview (HOME)
 async function getTrendingMoviesPreview() {
     const {data} = await api(endpoint_TRENDING);
     const movies = data.results;
@@ -37,7 +37,7 @@ async function getTrendingMoviesPreview() {
     });
 }
 
-// Función para ver las categorias de las películas
+// Función para ver las categorias de las películas para preview (HOME)
 async function getCategoriesPreview() {
     const {data} = await api(endpoint_GENRE);
     const categorias = data.genres;
@@ -57,6 +57,3 @@ async function getCategoriesPreview() {
         previewCategoriesContainer.appendChild(categoryContainer);
     })
 }
-
-getTrendingMoviesPreview();
-getCategoriesPreview();
