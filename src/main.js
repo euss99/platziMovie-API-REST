@@ -9,8 +9,9 @@ const api = axios.create({
     }
 });
 const endpoint_TRENDING = "trending/movie/day";
-const endpoint_GENRE = "genre/movie/list"
-const endpoint_DISCOVER = "discover/movie"
+const endpoint_GENRE = "genre/movie/list";
+const endpoint_DISCOVER = "discover/movie";
+const endpoint_SEARCH = "search/movie";
 
 // Utils -> Funciones que nos ayudan a reutilizar código
 function createMovies(movies, container) {
@@ -83,5 +84,17 @@ async function getMoviesByCategory(id) {
 
     const movies = data.results;
 
+    createMovies(movies, genericSection);
+}
+
+async function getMoviesBySearch(query) {
+    const {data} = await api(endpoint_SEARCH, {
+        // Especificando query parameters
+        params: {
+            query,
+        },
+    });
+
+    const movies = data.results;
     createMovies(movies, genericSection);
 }
