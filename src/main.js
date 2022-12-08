@@ -9,14 +9,12 @@ const api = axios.create({
     }
 });
 const endpoint_TRENDING = "trending/movie/day";
-const endpoint_GENRE = "/genre/movie/list"
+const endpoint_GENRE = "genre/movie/list"
+const endpoint_DISCOVER = "discover/movie"
 
-// Función para conseguir las películas en tendencia para preview (HOME)
-async function getTrendingMoviesPreview() {
-    const {data} = await api(endpoint_TRENDING);
-    const movies = data.results;
-
-    trendingMoviesPreviewList.innerHTML = ""; // Borrando el contenido en cada petición para que no se duplique la información.
+// Utils -> Funciones que nos ayudan a reutilizar código
+function createMovies(movies, container) {
+    container.innerHTML = ""; // Borrando el contenido en cada petición para que no se duplique la información.
 
     movies.forEach(movie => {
         
@@ -26,35 +24,64 @@ async function getTrendingMoviesPreview() {
         const movieImg = document.createElement("img");
         movieImg.classList.add("movie-img");
         movieImg.setAttribute("alt", movie.title);
-        // Concatenación de la URL base de las imágenes con un width de 300px
+        // Concatenación de la URL base de las imágenes con un width de     300px
         movieImg.setAttribute(
             "src", 
             "https://image.tmdb.org/t/p/w300/" + movie.poster_path
         );
 
         movieContainer.appendChild(movieImg);
-        trendingMoviesPreviewList.appendChild(movieContainer);
+        container.appendChild(movieContainer);
     });
 }
 
-// Función para ver las categorias de las películas para preview (HOME)
-async function getCategoriesPreview() {
-    const {data} = await api(endpoint_GENRE);
-    const categorias = data.genres;
+function createCategories(categories, container) {
+    container.innerHTML = "";
 
-    categoriesPreviewList.innerHTML = ""; // Borrando el contenido en cada petición para que no se duplique la información.
-
-    categorias.forEach(category => {
+    categories.forEach(category => {
         const categoryContainer = document.createElement("div");
         categoryContainer.classList.add("category-container");
 
         const categoryTitle = document.createElement("h3");
         categoryTitle.classList.add("category-title");
         categoryTitle.setAttribute("id", "id" + category.id);
+        categoryTitle.addEventListener("click", () => {
+            location.hash = `#category=${category.id}-${category.name}`;
+        })
         const categoryTitleText = document.createTextNode(category.name);
 
         categoryTitle.appendChild(categoryTitleText);
         categoryContainer.appendChild(categoryTitle);
-        categoriesPreviewList.appendChild(categoryContainer);
-    })
+        container.appendChild(categoryContainer);
+    });
+}
+
+/* Llamados a la API */
+// Función para conseguir las películas en tendencia para preview (HOME)
+async function getTrendingMoviesPreview() {
+    const {data} = await api(endpoint_TRENDING);
+    const movies = data.results;
+
+    createMovies(movies, trendingMoviesPreviewList);
+}
+
+// Función para ver las categorias de las películas para preview (HOME)
+async function getCategoriesPreview() {
+    const {data} = await api(endpoint_GENRE);
+    const categories = data.genres;
+
+    createCategories(categories, categoriesPreviewList);
+}
+
+async function getMoviesByCategory(id) {
+    const {data} = await api(endpoint_DISCOVER, {
+        // Especificando query parameters
+        params: {
+            with_genres: id,
+        },
+    });
+
+    const movies = data.results;
+
+    createMovies(movies, genericSection);
 }

@@ -34,6 +34,9 @@ function navigator() {
         // Si ninguno funciona entrar al home
         homePage();
     }
+
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0; // Manera de que siempre que entremos a otra página, aparezca en la parte de ariba (con esas dos líneas).
 }
 
 function homePage() {
@@ -72,6 +75,17 @@ function categoriesPage() {
     categoriesPreviewSection.classList.add("inactive");
     genericSection.classList.remove("inactive");
     movieDetailSection.classList.add("inactive");
+
+    // Creando un array con el método split, en este caso crearía un elemento dentro del array cada que se encuentre con "="
+    const [ , categoryData] = location.hash.split("=") // ["#category", "id-name"]
+    // Separando categoryData
+    const [categoryId, categoryName] = categoryData.split("-") // ["id", "name"]
+
+    
+    // const newName = categoryName.replace("%20", " ");
+    const newName = decodeURI(categoryName);
+    headerCategoryTitle.innerHTML = newName;
+    getMoviesByCategory(categoryId);
 }
 
 function movieDetailsPage() {
