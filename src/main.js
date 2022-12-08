@@ -74,6 +74,7 @@ async function getCategoriesPreview() {
     createCategories(categories, categoriesPreviewList);
 }
 
+// Función para ver las categorias de las películas (CATEGORIES)
 async function getMoviesByCategory(id) {
     const {data} = await api(endpoint_DISCOVER, {
         // Especificando query parameters
@@ -87,6 +88,7 @@ async function getMoviesByCategory(id) {
     createMovies(movies, genericSection);
 }
 
+// Función para ver las busquedas de las películas para preview (SEARCH)
 async function getMoviesBySearch(query) {
     const {data} = await api(endpoint_SEARCH, {
         // Especificando query parameters
@@ -96,5 +98,13 @@ async function getMoviesBySearch(query) {
     });
 
     const movies = data.results;
+    createMovies(movies, genericSection);
+}
+
+// Función para ver los trending de las películas (endpoint_TRENDING)
+async function getTrendingMovies() {
+    const {data} = await api(endpoint_TRENDING);
+    const movies = data.results;
+
     createMovies(movies, genericSection);
 }
