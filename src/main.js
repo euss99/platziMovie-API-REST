@@ -12,7 +12,7 @@ const endpoint_TRENDING = "trending/movie/day";
 const endpoint_GENRE = "genre/movie/list";
 const endpoint_DISCOVER = "discover/movie";
 const endpoint_SEARCH = "search/movie";
-const endpoint_DETAILS = "movie/"
+const endpoint_DETAILS = "movie/";
 
 // Utils -> Funciones que nos ayudan a reutilizar código
 function createMovies(movies, container) {
@@ -139,4 +139,14 @@ async function getMovieById(id) {
 
     // Agregando las categorias.s
     createCategories(movie.genres, movieDetailCategoriesList);
+
+    getRelatedMoviesId(id);
+}
+
+// Función para ver las películas relacionadas dependiendo de la película.
+async function getRelatedMoviesId(id) {
+    const { data } = await api(`movie/${id}/recommendations`);
+    const relatedMovies = data.results;
+
+    createMovies(relatedMovies, relatedMoviesContainer);
 }
