@@ -12,6 +12,7 @@ const endpoint_TRENDING = "trending/movie/day";
 const endpoint_GENRE = "genre/movie/list";
 const endpoint_DISCOVER = "discover/movie";
 const endpoint_SEARCH = "search/movie";
+const endpoint_DETAILS = "movie/"
 
 // Utils -> Funciones que nos ayudan a reutilizar código
 function createMovies(movies, container) {
@@ -21,6 +22,10 @@ function createMovies(movies, container) {
         
         const movieContainer = document.createElement("div");
         movieContainer.classList.add("movie-container");
+
+        movieContainer.addEventListener("click", () => {
+            location.hash = "#movie=" + movie.id;
+        });
 
         const movieImg = document.createElement("img");
         movieImg.classList.add("movie-img");
@@ -107,4 +112,31 @@ async function getTrendingMovies() {
     const movies = data.results;
 
     createMovies(movies, genericSection);
+}
+
+// Función para ver los detalles de una película en específico
+async function getMovieById(id) {
+    // Renombrando a la variable data como movie, ya que este endpoint de la api ya nos devolvería un objeto con los datos de la película.
+    const { data:movie } = await api(`${endpoint_DETAILS}${id}`);
+
+    // Agregando la imágen del poster
+    const movieImgURL = "https://image.tmdb.org/t/p/w300/" + movie.poster_path;
+    console.log(movieImgURL);
+    // Editando el CSS, para agregar el poster en el background:
+    headerSection.style.background = `
+    linear-gradient(
+        180deg, 
+        rgba(0, 0, 0, 0.35) 19.27%, 
+        rgba(0, 0, 0, 0) 29.17%
+        ),
+    url(${movieImgURL})
+    `;
+
+    // Cargando la información de la api en los respectivos apartados del HTML.
+    movieDetailTitle.textContent = movie.title;
+    movieDetailDescription.textContent = movie.overview;
+    movieDetailScore.textContent = movie.vote_average;
+
+    // Agregando las categorias.s
+    createCategories(movie.genres, movieDetailCategoriesList);
 }
