@@ -15,7 +15,21 @@ const endpoint_SEARCH = "search/movie";
 const endpoint_DETAILS = "movie/";
 
 // Utils -> Funciones que nos ayudan a reutilizar código
-function createMovies(movies, container) {
+
+/* === Intersection observer para el lazy loading === */
+// Creando una instancia del objeto IntersectionObserver que recibirá dos parámetros, una función (callback) y unas opciones IntersectionObserver(callback, options).
+// La función dentro de la instancia recibe dos parámetros, (entries, observe) => {}, las entries son cada uno de los elememtos que estamos observando y los observe.
+const lazyLoader = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            // isIntersecting sirve para saber si el elemento esta dentro de la vista del navegador.
+            const url = entry.target.getAttribute("data-img");
+            entry.target.setAttribute("src", url);
+        }
+    })
+});
+
+function createMovies(movies, container, lazyLoad = false) {
     container.innerHTML = ""; // Borrando el contenido en cada petición para que no se duplique la información.
 
     movies.forEach(movie => {
@@ -32,9 +46,13 @@ function createMovies(movies, container) {
         movieImg.setAttribute("alt", movie.title);
         // Concatenación de la URL base de las imágenes con un width de     300px
         movieImg.setAttribute(
-            "src", 
+            lazyLoad ? "data-img" : "src", 
             "https://image.tmdb.org/t/p/w300/" + movie.poster_path
         );
+
+        if (lazyLoad) {
+            lazyLoader.observe(movieImg);
+        }
 
         movieContainer.appendChild(movieImg);
         container.appendChild(movieContainer);
@@ -68,7 +86,7 @@ async function getTrendingMoviesPreview() {
     const {data} = await api(endpoint_TRENDING);
     const movies = data.results;
 
-    createMovies(movies, trendingMoviesPreviewList);
+    createMovies(movies, trendingMoviesPreviewList, true);
 }
 
 // Función para ver las categorias de las películas para preview (HOME)
