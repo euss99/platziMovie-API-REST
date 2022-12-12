@@ -133,6 +133,7 @@ img {
 
 .movie-img {
   border-radius: 8px;
+  min-height: 225px;
 }
 
 .categoriesPreview-list, .categories-list {

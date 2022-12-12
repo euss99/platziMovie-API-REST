@@ -44,12 +44,19 @@ function createMovies(movies, container, lazyLoad = false) {
         const movieImg = document.createElement("img");
         movieImg.classList.add("movie-img");
         movieImg.setAttribute("alt", movie.title);
-        // Concatenación de la URL base de las imágenes con un width de     300px
+        // Concatenación de la URL base de las imágenes con un width de 300px
         movieImg.setAttribute(
             lazyLoad ? "data-img" : "src", 
             "https://image.tmdb.org/t/p/w300/" + movie.poster_path
         );
-
+        // Creando un evento de error, en dado caso de que no se encuentre una imágen.
+        movieImg.addEventListener("error", () => {
+            movieImg.setAttribute(
+                "src",
+                "https://static.platzi.com/static/images/error/img404.png"
+            );
+        });
+            
         if (lazyLoad) {
             lazyLoader.observe(movieImg);
         }
@@ -108,7 +115,7 @@ async function getMoviesByCategory(id) {
 
     const movies = data.results;
 
-    createMovies(movies, genericSection);
+    createMovies(movies, genericSection, true);
 }
 
 // Función para ver las busquedas de las películas para preview (SEARCH)
