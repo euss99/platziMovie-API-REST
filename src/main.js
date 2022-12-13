@@ -8,6 +8,7 @@ const api = axios.create({
         "api_key": API_KEY,
     }
 });
+
 const endpoint_TRENDING = "trending/movie/day";
 const endpoint_GENRE = "genre/movie/list";
 const endpoint_DISCOVER = "discover/movie";
@@ -29,8 +30,18 @@ const lazyLoader = new IntersectionObserver((entries) => {
     })
 });
 
-function createMovies(movies, container, lazyLoad = false) {
-    container.innerHTML = ""; // Borrando el contenido en cada petición para que no se duplique la información.
+function createMovies(
+    movies, 
+    container, 
+    // Utilizanod un objeto para agrupar un parámetro booleano
+    {
+        lazyLoad = false, 
+        clean = true,
+    } = {},
+    ) {
+    if (clean) {
+        container.innerHTML = ""; // Borrando el contenido en cada petición para que no se duplique la información.
+    }
 
     movies.forEach(movie => {
         
@@ -87,7 +98,7 @@ function createCategories(categories, container) {
     });
 }
 
-/* Llamados a la API */
+/* === Llamados a la API === */
 // Función para conseguir las películas en tendencia para preview (HOME)
 async function getTrendingMoviesPreview() {
     const {data} = await api(endpoint_TRENDING);
@@ -114,8 +125,41 @@ async function getMoviesByCategory(id) {
     });
 
     const movies = data.results;
+    maxPage = data.total_pages;
 
-    createMovies(movies, genericSection, true);
+    createMovies(movies, genericSection, { lazyLoad: true });
+}
+
+function getPaginatedMoviesByCategory(id) {
+    return async function () {
+        const {
+            scrollTop, // Cuanto scroll se ha hecho, de solo lo que se esta viendo.
+            clientHeight, // Alto de la pantalla.
+            scrollHeight, // Scroll total que se puede hacer.
+        } = document.documentElement;
+    
+        const scrollIsBottom = (scrollTop + clientHeight) >= (scrollHeight - 15);
+        const pageIsNotMax = page < maxPage;
+    
+        if (scrollIsBottom && pageIsNotMax) {
+            page++;
+    
+            const {data} = await api(endpoint_DISCOVER, {
+                // Especificando query parameters
+                params: {
+                    with_genres: id,
+                    page,
+                },
+            });
+        
+            const movies = data.results;
+
+            createMovies(movies, 
+                genericSection, 
+                { lazyLoad: true, clean: false}
+            );
+        }
+    }
 }
 
 // Función para ver las busquedas de las películas para preview (SEARCH)
@@ -128,15 +172,84 @@ async function getMoviesBySearch(query) {
     });
 
     const movies = data.results;
+    maxPage = data.total_pages;
+
     createMovies(movies, genericSection);
+}
+
+function getPaginatedMoviesBySearch(query) {
+    return async function () {
+        const {
+            scrollTop, // Cuanto scroll se ha hecho, de solo lo que se esta viendo.
+            clientHeight, // Alto de la pantalla.
+            scrollHeight, // Scroll total que se puede hacer.
+        } = document.documentElement;
+    
+        const scrollIsBottom = (scrollTop + clientHeight) >= (scrollHeight - 15);
+        const pageIsNotMax = page < maxPage;
+    
+        if (scrollIsBottom && pageIsNotMax) {
+            page++;
+    
+            const {data} = await api(endpoint_SEARCH, {
+                params: {
+                    query,
+                    page,
+                },
+            });
+        
+            const movies = data.results;
+        
+            createMovies(movies, 
+                genericSection, 
+                { lazyLoad: true, clean: false}
+            );
+        }
+    }
 }
 
 // Función para ver los trending de las películas (endpoint_TRENDING)
 async function getTrendingMovies() {
     const {data} = await api(endpoint_TRENDING);
     const movies = data.results;
+    // Obteniendo el total de páginas.
+    maxPage = data.total_pages;
 
-    createMovies(movies, genericSection);
+    createMovies(movies, 
+        genericSection, 
+        { lazyLoad: true, clean: true}
+    );
+}
+
+// Función para cargar las diferentes páginas de películas.
+async function getPaginatedTrendinMovies() {
+    const {
+        scrollTop, // Cuanto scroll se ha hecho, de solo lo que se esta viendo.
+        clientHeight, // Alto de la pantalla.
+        scrollHeight, // Scroll total que se puede hacer.
+    } = document.documentElement;
+
+    // Validación para saber si el scrollTop más el clientHeight son mayores o iguales al scrollHeight.
+    const scrollIsBottom = (scrollTop + clientHeight) >= (scrollHeight - 15);
+    // Valiando que no sea la última página
+    const pageIsNotMax = page < maxPage;
+
+    if (scrollIsBottom && pageIsNotMax) {
+        page++; // Cada vez que se realice la función se sumamará una pagina.
+
+        const {data} = await api(endpoint_TRENDING, {
+            // Agregando un query parameter, para mostrar la paginación
+            params: {
+                page,
+            },
+        });
+        const movies = data.results;
+    
+        createMovies(movies, 
+            genericSection, 
+            { lazyLoad: true, clean: false}
+        );
+    }
 }
 
 // Función para ver los detalles de una película en específico

@@ -216,7 +216,6 @@ img {
   border-bottom-right-radius: 8px;
 }
 
-
 /* Trending */
 .trendingPreview-header {
   display: flex;
@@ -228,6 +227,7 @@ img {
   border-radius: 8px;
   height: 32px;
   width: 72px;
+  
 }
 
 .trendingPreview-movieList {

@@ -1,3 +1,7 @@
+let maxPage;
+let page = 1;
+let infiniteScroll;
+
 searchFormBtn.addEventListener("click", () => {
     location.hash = "#search=" + searchFormInput.value;
 });
@@ -11,12 +15,19 @@ arrowBtn.addEventListener("click", () => {
 });
 
 // LLamando a la función navigator al momento de que cargue la aplicación (la primera carga).
-window.addEventListener("DOMContentLoaded", navigator, false)
+window.addEventListener("DOMContentLoaded", navigator, false);
 // Llamando a la función navigator cada que cambie el hash (hashchange).
-window.addEventListener("hashchange", navigator, false)
+window.addEventListener("hashchange", navigator, false);
+// Llamando al evento de scroll para activar la función.
+window.addEventListener("scroll", infiniteScroll, false);
 
 function navigator() {
     console.log({ location });
+
+    if (infiniteScroll) {
+        window.removeEventListener("scroll", infiniteScroll, {passive: false});
+        infiniteScroll = undefined;
+    }
 
     if (location.hash.startsWith("#trends")) {
         // Si location.hash empieza en la sección de trends
@@ -37,6 +48,10 @@ function navigator() {
 
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0; // Manera de que siempre que entremos a otra página, aparezca en la parte de ariba (con esas dos líneas).
+
+    if (infiniteScroll) {
+        window.addEventListener("scroll", infiniteScroll, {passive: false});
+    }
 }
 
 function homePage() {
@@ -86,6 +101,8 @@ function categoriesPage() {
     const newName = decodeURI(categoryName);
     headerCategoryTitle.innerHTML = newName;
     getMoviesByCategory(categoryId);
+
+    infiniteScroll = getPaginatedMoviesByCategory(categoryId);
 }
 
 function movieDetailsPage() {
@@ -126,6 +143,8 @@ function searchPage() {
 
     const [ , query] = location.hash.split("=") // ["#search", "buscado"]
     getMoviesBySearch(query);
+
+    infiniteScroll = getPaginatedMoviesBySearch(query);
 }
 
 function trendsPage() {
@@ -147,4 +166,6 @@ function trendsPage() {
     headerCategoryTitle.innerHTML = "Tendencias";
 
     getTrendingMovies();
+
+    infiniteScroll = getPaginatedTrendinMovies;
 }
