@@ -48,13 +48,12 @@ function createMovies(
         const movieContainer = document.createElement("div");
         movieContainer.classList.add("movie-container");
 
-        movieContainer.addEventListener("click", () => {
-            location.hash = "#movie=" + movie.id;
-        });
-
         const movieImg = document.createElement("img");
         movieImg.classList.add("movie-img");
         movieImg.setAttribute("alt", movie.title);
+        movieImg.addEventListener("click", () => {
+            location.hash = "#movie=" + movie.id;
+        });
         // Concatenación de la URL base de las imágenes con un width de 300px
         movieImg.setAttribute(
             lazyLoad ? "data-img" : "src", 
@@ -67,12 +66,23 @@ function createMovies(
                 "https://static.platzi.com/static/images/error/img404.png"
             );
         });
+
+        // Creando el botón de like
+        const movieBtn = document.createElement("button");
+        movieBtn.classList.add("movie-btn");
+        movieBtn.addEventListener("click", () => {
+            // Cambio de clase al momento de darle click al boton
+            movieBtn.classList.toggle("movie-btn--liked")
+
+            // Agregar la película a local storge (Películas favoritas)
+        })
             
         if (lazyLoad) {
             lazyLoader.observe(movieImg);
         }
 
         movieContainer.appendChild(movieImg);
+        movieContainer.appendChild(movieBtn);
         container.appendChild(movieContainer);
     });
 }
