@@ -1,4 +1,5 @@
 /* Utilizando Axios para las peticiones a la API */
+// Data
 const api = axios.create({
     baseURL: "https://api.themoviedb.org/3/", // Parte que nunca va a cambiar de la URL
     headers: {
@@ -8,6 +9,39 @@ const api = axios.create({
         "api_key": API_KEY,
     }
 });
+
+// Local Storage
+// Función para devolvernos el objeto de películas que se tengan guardadas en local storage.
+function likedMoviesList() {
+    const item = JSON.parse(localStorage.getItem("liked_movies"));
+    let movies;
+
+    if (item) {
+        movies = item;
+    } else {
+        movies = {};
+    }
+
+    return movies;
+}
+
+function likeMovie(movie) {
+    const likedMovies = likedMoviesList();
+
+    /* if ( movie está en localStorage ) {
+        Removerla de LocalStorage
+    } else {
+        Agregarla a localStorage
+    } */
+
+    if (likedMovies[movie.id]) {
+        likedMovies[movie.id] = undefined; // Eliminando la propiedad de la pelicula en el objeto.
+    } else {
+        likedMovies[movie.id] = movie;
+    }
+
+    localStorage.setItem("liked_movies", JSON.stringify(likedMovies));
+}
 
 const endpoint_TRENDING = "trending/movie/day";
 const endpoint_GENRE = "genre/movie/list";
@@ -75,6 +109,7 @@ function createMovies(
             movieBtn.classList.toggle("movie-btn--liked")
 
             // Agregar la película a local storge (Películas favoritas)
+            likeMovie(movie);
         })
             
         if (lazyLoad) {
@@ -129,7 +164,7 @@ async function getCategoriesPreview() {
 async function getMoviesByCategory(id) {
     const {data} = await api(endpoint_DISCOVER, {
         // Especificando query parameters
-        params: {
+        movie: {
             with_genres: id,
         },
     });
