@@ -13,7 +13,7 @@ const categoriesPreviewList = document.querySelector('.categoriesPreview-list');
 const movieDetailCategoriesList = document.querySelector('#movieDetail .categories-list');
 const relatedMoviesContainer = document.querySelector('.relatedMovies-scrollContainer');
 const likedMoviesListContainer = document.querySelector('.liked-movieList');
-const selectLenguage = document.querySelector("#lang");
+const selectLenguage = document.querySelector(".header-lenguage");
 
 // Elements
 const headerTitle = document.querySelector('.header-title');
