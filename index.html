@@ -15,17 +15,19 @@
 <body>
   <header id="header" class="header-container">
     <span class="header-arrow inactive">&lt;</span>
-    <h1 class="header-title">PlatziMovies</h1>
 
-    <select name="language" id="lang">
-      <option class="optLang" value="en">US</option>
-      <option class="optLang" value="fr">FR</option>
-      <option class="optLang" value="es-ES">ES</option>
-      <option class="optLang" value="pt-BR">BR</option>
-      <option class="optLang" value="es-VE">VE</option>
-    </select>
-
-    <h1 class="header-title header-title--categoryView inactive">Acción</h1>
+    <div class="header-container--flex">
+      <h1 class="header-title">PlatziMovies</h1>      
+      <h1 class="header-title header-title--categoryView inactive">Acción</h1>
+  
+      <select name="language" id="lang" class="header-lenguage">
+        <option class="optLang" value="en">US</option>
+        <option class="optLang" value="fr">FR</option>
+        <option class="optLang" value="es-ES">ES</option>
+        <option class="optLang" value="pt-BR">BR</option>
+        <option class="optLang" value="es-VE">VE</option>
+      </select>
+    </div>
 
     <form id="searchForm" class="header-searchForm">
       <input type="text" placeholder="Vengadores" />

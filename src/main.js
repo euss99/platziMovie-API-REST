@@ -7,7 +7,7 @@ const api = axios.create({
     },
     params: {
         "api_key": API_KEY,
-        "language": lang || navigator.language,
+        // "language": lang || navigator.language,
     }
 });
 

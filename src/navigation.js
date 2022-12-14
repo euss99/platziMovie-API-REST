@@ -1,7 +1,7 @@
 let maxPage;
 let page = 1;
 let infiniteScroll;
-let lang = 'en';
+// let lang = 'en';
 
 searchFormBtn.addEventListener("click", () => {
     location.hash = "#search=" + searchFormInput.value;
@@ -15,11 +15,11 @@ arrowBtn.addEventListener("click", () => {
     location.hash = window.history.back(); // Para regresar a la busqueda anterior.
 });
 
-selectLenguage.addEventListener('click', () => {
-    lang = selectLenguage.value;
-    console.log(lang);
-    homePage();
-});
+// selectLenguage.addEventListener('change', () => {
+//     lang = selectLenguage.value;
+//     console.log(lang);
+//     homePage();
+// });
 
 // LLamando a la función Navigator al momento de que cargue la aplicación (la primera carga).
 window.addEventListener("DOMContentLoaded", Navigator, false);
