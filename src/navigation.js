@@ -75,6 +75,7 @@ function homePage() {
     trendingPreviewSection.classList.remove("inactive");
     categoriesPreviewSection.classList.remove("inactive");
     likedMoviesSection.classList.remove("inactive");
+    selectLenguage.classList.remove("inactive");
     genericSection.classList.add("inactive");
     movieDetailSection.classList.add("inactive");
 
