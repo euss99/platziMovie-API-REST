@@ -1,6 +1,7 @@
 let maxPage;
 let page = 1;
 let infiniteScroll;
+let lang = 'en';
 
 searchFormBtn.addEventListener("click", () => {
     location.hash = "#search=" + searchFormInput.value;
@@ -14,14 +15,20 @@ arrowBtn.addEventListener("click", () => {
     location.hash = window.history.back(); // Para regresar a la busqueda anterior.
 });
 
-// LLamando a la función navigator al momento de que cargue la aplicación (la primera carga).
-window.addEventListener("DOMContentLoaded", navigator, false);
-// Llamando a la función navigator cada que cambie el hash (hashchange).
-window.addEventListener("hashchange", navigator, false);
+selectLenguage.addEventListener('click', () => {
+    lang = selectLenguage.value;
+    console.log(lang);
+    homePage();
+});
+
+// LLamando a la función Navigator al momento de que cargue la aplicación (la primera carga).
+window.addEventListener("DOMContentLoaded", Navigator, false);
+// Llamando a la función Navigator cada que cambie el hash (hashchange).
+window.addEventListener("hashchange", Navigator, false);
 // Llamando al evento de scroll para activar la función.
 window.addEventListener("scroll", infiniteScroll, false);
 
-function navigator() {
+function Navigator() {
     console.log({ location });
 
     if (infiniteScroll) {
@@ -67,6 +74,7 @@ function homePage() {
 
     trendingPreviewSection.classList.remove("inactive");
     categoriesPreviewSection.classList.remove("inactive");
+    likedMoviesSection.classList.remove("inactive");
     genericSection.classList.add("inactive");
     movieDetailSection.classList.add("inactive");
 
@@ -88,6 +96,7 @@ function categoriesPage() {
 
     trendingPreviewSection.classList.add("inactive");
     categoriesPreviewSection.classList.add("inactive");
+    likedMoviesSection.classList.add("inactive");
     genericSection.classList.remove("inactive");
     movieDetailSection.classList.add("inactive");
 
@@ -118,6 +127,7 @@ function movieDetailsPage() {
 
     trendingPreviewSection.classList.add("inactive");
     categoriesPreviewSection.classList.add("inactive");
+    likedMoviesSection.classList.add("inactive");
     genericSection.classList.add("inactive");
     movieDetailSection.classList.remove("inactive");
 
@@ -138,6 +148,7 @@ function searchPage() {
 
     trendingPreviewSection.classList.add("inactive");
     categoriesPreviewSection.classList.add("inactive");
+    likedMoviesSection.classList.add("inactive");
     genericSection.classList.remove("inactive");
     movieDetailSection.classList.add("inactive");
 
@@ -160,6 +171,7 @@ function trendsPage() {
 
     trendingPreviewSection.classList.add("inactive");
     categoriesPreviewSection.classList.add("inactive");
+    likedMoviesSection.classList.add("inactive");
     genericSection.classList.remove("inactive");
     movieDetailSection.classList.add("inactive");
 

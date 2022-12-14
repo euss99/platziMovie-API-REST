@@ -7,13 +7,14 @@ const api = axios.create({
     },
     params: {
         "api_key": API_KEY,
+        "language": lang || navigator.language,
     }
 });
 
 // Local Storage
 // Función para devolvernos el objeto de películas que se tengan guardadas en local storage.
 function likedMoviesList() {
-    const item = JSON.parse(localStorage.getItem("liked_movies"));
+    const item = JSON.parse(localStorage.getItem("liked_movies")); // Convirtiendo en objeto lo que venga en local storage.
     let movies;
 
     if (item) {
@@ -34,13 +35,21 @@ function likeMovie(movie) {
         Agregarla a localStorage
     } */
 
+    console.log(likedMovies);
+
     if (likedMovies[movie.id]) {
         likedMovies[movie.id] = undefined; // Eliminando la propiedad de la pelicula en el objeto.
     } else {
         likedMovies[movie.id] = movie;
     }
 
-    localStorage.setItem("liked_movies", JSON.stringify(likedMovies));
+    localStorage.setItem('liked_movies', JSON.stringify(likedMovies)); // Agregando al local storage y convirtiendo el contenido a un string.
+
+    // Actualizando la página para agregar la película a favoritos.
+    if (location.hash == ''){
+        getLikedMovies();
+        getTrendingMoviesPreview(); 
+    }
 }
 
 const endpoint_TRENDING = "trending/movie/day";
@@ -104,6 +113,12 @@ function createMovies(
         // Creando el botón de like
         const movieBtn = document.createElement("button");
         movieBtn.classList.add("movie-btn");
+
+        // Las películas que se agregan en la sección de favoritas agregarle la clase "movie-btn--liked".
+        if (likedMoviesList()[movie.id]) {
+            movieBtn.classList.add('movie-btn--liked');
+        }
+
         movieBtn.addEventListener("click", () => {
             // Cambio de clase al momento de darle click al boton
             movieBtn.classList.toggle("movie-btn--liked")
@@ -332,4 +347,14 @@ async function getRelatedMoviesId(id) {
     const relatedMovies = data.results;
 
     createMovies(relatedMovies, relatedMoviesContainer);
+}
+
+// Función para consumir el local storage y agregar las películas favoritas en su sección.
+function getLikedMovies() {
+    const likedMovies = likedMoviesList();
+    const moviesArray = Object.values(likedMovies);
+  
+    createMovies(moviesArray, likedMoviesListContainer, { lazyLoad: true, clean: true });
+
+    console.log(likedMovies);
 }
